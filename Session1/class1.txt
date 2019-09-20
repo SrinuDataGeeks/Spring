@@ -1,0 +1,449 @@
+Enterprice Application :-
+**********************
+Enterprice Appliction is a Bussiness Application which contains complex and heavy weight bussiness logics.
+
+Ex : Bank Application's,
+     Online Store Application's like flipkart,amezon 		etc,
+     Payroll application's like Employee salary deposit appliction's ,
+	Issurance application's .
+
+An Enterprice Application can be implemented using Layered Architecture.
+
+A Layered Architecture devides an Enterprice Application into Four Layers.
+
+Layer or Tier :-
+***************
+=>Layer is a group of related java classes having the capability of to do some work.
+
+DataAccessLayer :-
+****************
+	A DataAccessLayer is a group of DAO classes.
+
+Data Access Object (DAO) :-
+*************************
+DAO class is a java class which contains only the Database Interaction Logic.
+
+Bussiness Logic Layer or Service Layer :-
+***************************************
+=> Bussiness Logic Layer is a group of Service classes.
+
+Service Class :-
+*************
+	Service class is a java class which contains Bussiness Rules implementation logic.
+
+Presentation Layer :-
+******************
+A Presentation Layer contains Group of Jsp's, Servlet  and Controller classes which provides user interfaces to the client.
+
+
+Advantages of Layered Architecture :-
+*************************************
+
+=> Makes a loose coupling between the Layers.
+=>Modification done in one layer won't be reflected in other layers.
+=>Reduces the maintanace problems.
+=>Parallel development is possible.
+=>Allows the programmer to use multiple technologies and frameworks so that reduces the burdden on the ogrammer.
+=>Makes a clear seperation between the Layers.
+
+Understanding POJO class :-
+**************************
+Plain Old Java Object (POJO) :-
+*********************
+	Whatever java class Object life cycle can be maintained by the JVM is called as POJO class.
+
+In simple Whatever Java class we can run on JVM  is a POJO class.
+	
+class  Sample
+	{
+......
+......
+	} // POJO class
+
+class  AccountHolder implements java.io.Serializable
+	{
+private int accNo;
+private String accName;
+private float balance;
+.....
+.....
+	}// POJO
+
+
+class Test implemets javax.servlet.Servlet
+	{
+.......
+.......
+	}// Not POJO
+
+
+class  SampleTest implements java.lang.Cloneable
+	{
+.......
+.......
+	} // POJO class
+
+
+Understanding POJO class :-
+**************************
+Plain Old Java Object (POJO) :-
+*********************
+	Whatever java class Object life cycle can be maintained by the JVM is called as POJO class.
+
+In simple Whatever Java class we can run on JVM  is a POJO class.
+	
+class  Sample
+	{
+......
+......
+	} // POJO class
+
+class  AccountHolder implements java.io.Serializable
+	{
+private int accNo;
+private String accName;
+private float balance;
+.....
+.....
+	}// POJO
+
+
+Observation on java.io.Serializable :-
+**********************************
+
+=> java.io.Serializable is a marker interface which does not contains any abstract methods.
+
+=>If any java class which is implementing Serializable interface  JVM treat those object's as Serializable object's.
+
+=>For all the Serializable object's JVM add some additional functionalities to maintain the Object over the network.
+
+
+class  SampleTest implements java.lang.Cloneable
+	{
+.......
+.......
+	} // POJO class
+
+
+Observation java.lang.Cloneable :-
+*******************************
+=>The java.lang.Cloneable is a marker interface.
+=>If any java class which is implementing Cloneable interface JVM treat those object's as Cloneable object's.
+=> For all the Cloneable Object's duplicate object's can be created by the JVM.
+java
+=>The "java.lang.Object" class contains following method which can return the duplicate object.
+
+protected native java.lang.Object clone()   throws java.lang.CloneNotSupportedException
+
+
+Undertanding public String toString()
+*************************************
+=>The "toString()" method is defined in the java.lang.Object class.
+
+=> The "toString()" method returns the address of the java class Object.
+
+=> If we override toString() method within the child class we can print the State of a object.
+
+Observation on "protected" access specifier :-
+*****************************************
+=> The "protected" members of a Parent class can be accessable within child class only through inheritance ,if the child class is in diffrent package.
+
+=>And also the protected members of Parent class can be accessible only within immidiate child class.
+
+This concept will be applicable only when Parent and Child classes in different packages.
+
+
+class Test implemets javax.servlet.Servlet
+	{
+.......
+.......
+	}// Not POJO
+
+This is not a POJO class because all the "Servlet" object's can be maintained by the Servlet Container.
+
+A Servlet object can not be maintained by the JVM.
+
+Understanding Automatic Memory Management :-
+*****************************************
+=>Automatic Memory Management is a concept of removing unused object's from the memory by the JVM.
+
+=>JVM can remove only the obejct's which are not refered any reference.
+
+=>When the JVM removes the Object JVM calls
+ "public void finalize()" method of a Object class.
+
+
+			Spring 
+			*******
+
+=>Spring is a MultiTier,Light Weight Application Framework.
+
+Spring is MultiTier because Spring can be used to implement any type of Layer.
+
+Spring is Light Weight because supports complete POJO based programming and taken care about Memory Management.
+
+Spring is a Application Framework because Spring can generates the common logics related to all the Layer's.
+Spring has given multiple modules for implementing Enterprice Appliction.
+
+
+	Spring Core  or  IOC module :-
+	****************************
+
+=> Object Orientation is a concept of "One Object is communicating with another Object by invoking each other methods".
+
+=> In any Object Orientation we can find two types of Object.
+	1. Dependent Object
+	2. Dependency Object
+
+
+ Dependent Object :-
+ *******************
+	An Object which is requesting a Service is called as Dependent Object.
+
+	
+ Dependency Object :-
+ ****************   
+An Object which is providing a Service is called as Dependency Object.
+
+Note :-
+*****
+	If the Dependent class want to invoke the methods of a Dependency class the "Dependent Class" should create the object of "Dependency".
+
+Inversion of Control (IOC) :-
+**************************
+IOInversion of Control is a design pattern. Which defines following priceple .
+
+"We should not allow the java programmer to create a java class object, the object's should be created by an External Entity".
+
+Because if the java programmer creates the object's he should takecare about memory management.
+
+This IOC princeple is implemented in SpringContainer.
+In Sprig the SpringContainer can create all the Java class object's.
+
+
+Dependency Injection :-
+********************
+	Injecting the dependency's into the dependent's by the Spring Container can be called as  Dependency Injection.
+
+	SpringContainer performs Dependency Injection in two ways.
+
+		1.Setter Injection
+		2.Constructor Injection.
+
+SpringBean :-
+**********
+In Spring Terminology a POJO class can be called as a "SpringBean".
+
+The "SpringBean" life cycle can be maintained by the SpringContainer.
+
+Understanding  SpringContainer :-
+*******************************
+=> SpringContainer is a simple java class given by the SpringFramework developers.
+
+=>The SpringContainer is a light weight container because we directly start the SpringContainer on JVM.
+
+=>To start the SpringContainer we don't need any additional webservers or application servers.
+
+=> The "org.springframework.beans.factory.BeanFactory" is an interface given by Spring.
+
+=>The implementation class of "BeanFactory" can be act as a SpringContainer.
+
+=>The "org.springframework.beans.factory.xml.XmlBeanFactory" is an implementation class of "BeanFactory".
+
+=>Creating a "XmlBeanFactory" object is nothing but activating the SpringContainer.
+
+=>In generally we will configure all the SpringBeans within the bean configuration file.
+
+=>Spring Container reads the bean configuration file then maintains the life cycle of a SpringBeans.
+
+The Spring Container object can be created by using following constrcutor.
+
+	public XmlBeanFactory(Resource resource)
+
+
+org.springframework.core.io.Resource :-
+*************************************
+=> Resource is an interface. One of the implementation class of Resoruce interface can loads bean configuration file into the memory then make it available to the SpringContainer.
+
+=>The "FileSystemResource" and "ClassPathResource" are the implementatio classes of "Resource" interface.
+
+=>These two classes are also  in same package.
+
+Constructors :-
+*************
+1.FileSystemResource(String cfgFileName)
+2.ClassPathResource(String cfgFileName)
+
+******************************************************
+Developing Spring HelloBean Application :-
+****************************************
+
+To run this application we need to set following jar files as in classpath
+
+asm.jar
+commons-logging.jar
+beans.jar
+core.jar
+expression.jar
+
+CMD promt: >set classpath=.;D:\SPRING3.x\asm-3.1.0..jar;D:\
+SPRING3.x\commons-logging.jar;D:\SPRING3.x\beans-3.1.0.jar;D:\SPRING3.x\core-3.1
+.0.jar;D:\SPRING3.x\expression-3.1.0.jar
+
+Compilation > javac -d . *.java
+To Run  > java com.nit.HelloBeanApp
+
+Observations in HelloBeanApp :-
+******************************
+=>The SpringContainer creates a SpringBean Object by using default constructor.
+
+=>If there is no default constructor SpringContainer throws BeanInstantiation exception.
+=>All the SpringBean Object's are by default Singleton's.
+
+=>Because by default scope of the SpringBean is "singleton" .
+
+<bean id="hbid"  class="com.nit.HelloBean"  scope="singleton">
+</bean>
+
+
+=>If we chage the Scope of the SpringBean as "prototype" SpringCotainer will create the SpringBean object for every client request.
+
+Chage the HelloBeanApp code as 
+
+main(...) {
+	.....
+container.getBean("hbid");
+container.getBean("hbid");
+container.getBean("hbid");
+  }
+
+beans.xml
+*********
+<bean id="hbid"  class="com.nit.HelloBean"  scope="prototype">
+</bean>
+
+Observe on the console the Constructor will be invoked three times.
+
+
+Spring has given scope's related to WebApplicationContext.
+
+scope="request" :-
+*************
+	SpringContainer will create the SpringBean object for every client request.
+
+scope="session" :-
+*************	
+SpringContainer will create the SpringBean object for every client Session.
+
+scope="global" :-
+*************	
+SpringContainer will create the SpringBean object for only once through out the webApplication.
+
+Understanding Setter-Injection  :-
+*******************************
+=> Declare all the Dependencies as an instance variables with in a SpringBean.
+
+=>Write a Setter method for every Dependency.
+
+=>Configure the dependencies within the bean configuration file using "<property>" tag.
+
+	If the dependency is of "primitive type" we can use "<poroperty name="dependecyName"
+ value="passdata" />  tag.
+
+
+If the dependency is of "Userdefined type" we can use "<poroperty name="dependecyName"
+ref="Id_Value" />  tag.
+
+Procedure to develop the SpringApplication :-
+*******************************************
+=> Develop all the SpringBeans required for SpringApplication.
+
+=>Configure all the SpringBeans within bean configuration file.
+	If the SpringBean is declaring any dependencies configure them.
+
+=>Within the Application activate the SpringContainer ,initiate the starting SpringBean.
+Understanding Constructor-Injection :-
+************************************
+=>In case of Constructor Injection SpringContainer make use of Parameterized constructor to create the object of a SpringBean.
+
+=>In case of Constructor Injection the object creation and dependecy injection can takes place at the same time.
+
+	Where as in Setter Injection first spring container creates the SpringBean object later performs dependecy injection by calling setter method.
+
+Procedure to work with Constructor Injection:-
+********************************************
+=>Declare all the dependencies as an instance variables.
+=>Take all the dependencies as parameters to the Constructor.
+=>Within the bean configuration file make use of "<constructor-arg>" tag.
+
+=>If the dependency is of primitive type make use of "value" attribute within "<constructor-arg>" tag otherwise make use of "ref" attribute.
+
+=>"<constructor-arg>" tag does not need any "name" attribute because the constructor name is same as class name.
+
+Ex:-
+***
+CountryApp.java
+****************
+appCode:-
+....
+....
+CountryBean bean=(CountryBean) container.getBean("countryId");
+bean.getCountryInfo();
+....
+....
+Understanding Constructor Abguity:-
+*********************************
+Observe the following example 
+
+Employee.java
+**************
+
+EmpApp.java
+************
+.....
+Employee  emp= (Employee) container.getBean("empId");
+	emp.printEmpInfo();
+....
+
+output :
+
+ empId : null
+ empName : 1242
+ empSal : 5000.0
+
+Actually here the Employee id  should be "1242" but we got it as null. The employee name is updated as "1242".
+
+Because by default SpringContainer treats whatever values we are passing from the bean configuration as "String".
+
+<bean id="empId" class="com.nit.Employee">
+<constructor-arg value="1242" />
+<constructor-arg value="5000" />
+</bean>
+
+Here the SpringContainer treats "1242" as String value so that it blindly invokes the "public Employee(String empName,Float empSal)" constructor.
+
+To avoid this constructor abguity we need to make use of "index" and "type" attributes.
+
+
+<bean id="empId" class="com.nit.Employee">
+<constructor-arg index="0"  type="java.lang.Integer" value="1242" />
+<constructor-arg value="5000" index="1" type="java.lang.Float" />
+</bean>
+
+Understanding Circular dependency :-
+*********************************
+=>In the above digram "SampleA" and "SampleB" beans are depending on each other.
+=>If we follow Constructor-Injection , SpringContainer needs "SambleB" reference to create a object of "SampleA" and vice versa.
+
+So that SpringContainer can not able to create any java class object then throws "CircularDependecyException".
+
+To avoid this we need to make use of "Setter-Injection".
+
+Which is prefferable Constructor-Injection or Setter-Injection ...?
+**************************************************
+=>Setter-Injection is prefferable because we can avoid circular dependencies.
+=>In Setter-Injection there is no abguity.
+
+Understanding Interfaces in Spring:-
+**********************************
+=> Interfaces  are mainly used to make a loose coupling between Service Request and Service Provider object's.

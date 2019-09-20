@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+        
+        <bean id="empId" class="com.datageeks.beans.Employee" >
+        <constructor-arg value="Srinu"></constructor-arg>
+        <constructor-arg ref="addrId"></constructor-arg>
+        </bean>
+        
+          <bean id="addrId" class="com.datageeks.beans.Address" >
+        <constructor-arg value="Hyderabad"></constructor-arg>
+        <constructor-arg ref="empId"></constructor-arg>
+        </bean>
+        
+        </beans>
