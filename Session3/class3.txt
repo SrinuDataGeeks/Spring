@@ -1,0 +1,352 @@
+HotelApp.java
+*************
+.....
+.....
+Customer  bean= (Customer) container.getBean("cusId");
+	bean.getService();
+....
+....
+
+*****************************************
+Instantiation of a SpringBean :-
+*****************************
+
+Sparing Container can able to instantiates the SpringBean in 3 ways.
+
+	1.Using Default Constructor
+	2.Using Static Factory Method
+	3.Using Instance Factory Method
+
+
+Instantiating a Spring using Default Constructor :-
+*************************************************
+
+**SpringContainer can create the SpringBean object even if we make a Constructor as "private".
+
+Sample Code :-
+************
+package com.nit;
+public class HelloBean
+	{
+private HelloBean()
+{
+Sysout("\n\n private Constructor is invoked...");
+}
+	}
+
+beans.xml
+*********
+<beans ...>
+<bean id="hbid" class="com.nit.HelloBean" />
+</beans>
+
+AppCode :-
+*******
+....
+....
+container.getBean("hbid");
+
+
+Instantiating a Spring using Static Factory Method:-
+*************************************************
+Static Factory Method :-
+*********************
+A Static Method of a java class having the capability of returning it's won java class object reference can be called as Static Factory Method.
+
+Ex:-
+Class c=Class.forName(String);
+Thread t=Thread.currentThread();
+
+=>SpringContainer can create the SpringBean Object using Static Factory Method.
+
+=>Here we need to configure the "Static Factory Method" within the "<bean>" tag using "factory-method" attribute.
+
+HelloBeanApp.java
+*******************
+HelloBean obj=(HelloBean) container.getBean("hbid");
+obj.display();
+
+*********************************
+Instantiating a Spring using Instance  Factory Method:-
+*************************************************
+A Non Static Method of a java class having the capability of returning it's won java class object reference can be called as Instance Factory Method.
+
+Ex:-
+****
+String str1=new String("Welcome to Spring");
+String str2=str1.subString(2,7);
+
+=>To configure the Instane Factory Method we need use "factory-bean" and "factory-method" attribute's within a  "<bean>" tag .
+
+
+HelloBeanApp.java
+*****************
+HelloBean obj=(HelloBean) container.getBean("hbid");
+obj.display();
+
+Working with initialization logics :-
+***********************************
+=>Initialization logic  means the logic which needs to be executed only once after creation of the SpringBean object.
+
+In Spring the Initialization logic can be executed in three ways.
+
+=> By implimenting InitializingBean interface
+=> Using "init-method" attribute.
+=> Using annotations.
+Using InitializingBean :-
+***********************
+=>The "org.springframework.beans.factory.InitializingBean" interface contains an abstract method as "public abstract void afterPropertiesSet()".
+
+=>The "afterPropertiesSet()" method is automatically called by the SpringContainer after creation of the SpringBean object.
+
+=>Within this method we can implement Initialization logic.
+
+HelloBeanApp.java
+*****************
+....
+HelloBean obj=(HelloBean) container.getBean("hbid");
+obj.display();
+
+drawback :-
+*********
+Here the SpingBean depending on SpringAPI.
+
+=>To avoid this we can make use of "init-method" attribute.
+
+=>If we use "init-method" attribute of a "<bean>" tag we no need to depends on SpringAPI to develop initialization logic.
+
+=> "init-method" attribute can be used to configure the userdefined initialization method.
+
+HelloBeanApp.java (take it from previous App)
+
+*****************************************************
+
+Resource Deallocation Logic :-
+***************************
+The resource deallocation logic contains memory deallocation of resources.
+	like closing connection object,statement object etc...
+
+The SpringContainer invokes the resource deallocation logic before removing SpringBean object.
+In Spring the resource deallocation logic can be implemented in three ways.
+
+1.Using DisposableBean
+2.Using destroy-method attribute
+3.Using annotations.
+
+Using org.springframework.beans.factory.DisposableBean :-
+
+=> The DisposableBean contains an abstract method as "public abstract void destroy()".
+
+=>This method will automatically called by the SpringContainer.
+
+HelloBeanApp.java
+****************
+....
+.....
+XmlBeanFactory container=new XmlBeanFactory(resource); 
+
+HelloBean obj=(HelloBean) container.getBean("hbid");
+obj.display();
+container.destroySingletons(); 
+
+
+public void destroySingletons() :-
+*******************************
+When we call this method SpringContainer removes all the Singleton object's. Before removing the Singleton object invokes the "destroy()" method.
+
+
+using "destroy-method" attribute :-
+******************************
+=>If we use "destroy-method" attribute our SpringBean can be a pojo class. 
+
+=>We can implement resource deallocation logic within our own userdefined methods.
+
+HelloBeanApp.java (Take it from previous Appliction).
+******************************************************
+Drawbacks of BeanFactory :-
+************************
+
+Drawbacks BeanFactory :-
+**********************
+=> BeanFactory does not supports java 1.5 and above features.
+	Such as Generics,Annotations etc..
+
+=>BeanFactory can not able to read the data from properties file.
+
+=>BeanFactory does not supports Internationlization concept.
+
+=>BeanFactory needs additional "Resource" object to read the bean cofiguration file.
+
+=>BeanFactory does not creates a SpringBean object until we make a request.
+
+All these drawbacks are addressed by "ApplictionContext".
+
+org.springframework.context.ApplictionContext :-
+********************************************
+=>ApplicationContext is a subinterface of BeanFactory.
+
+=>ApplicationContext creates all the SpringBean object's while reading the configuration file itself.
+
+=>The "ClassPathXmlApplicationContext"  is an implementation class of ApplicationContext.
+
+org.springframework.context.support.ClassPathXmlApplictionContext :-
+********************************************
+Constrcutors :-
+************
+ClassPathXmlApplictionContext(String cfgFile) :-
+
+ApplicationContext context=new ClassPathXmlApplictionContext("beans.xml");
+
+If we have more than one bean configuration file we can use following Constructor.
+
+
+ClassPathXmlApplictionContext(String[]) :-
+
+ApplicationContext context=new ClassPathXmlApplictionContext(new String[]{"beans1.xml","beans2.xml"});
+
+Procedure to develop Spring Application using Eclipse :-
+*****************************************************
+
+InnerBean :-
+**********
+Declaring a bean inside a bean can be called as inner bean.
+
+class StateBean
+	{
+.....
+	}
+
+class CountryBean
+	{
+private StateBean stateRef;
+
+public void setStateRef(StateBean stateRef){
+.....
+}
+	}
+
+beans.xml
+*********
+	
+<beans ...>
+	<bean id="countryId" class="CountryBean" >
+	<property name="stateRef">
+	<bean class="StateBean" /> <!-- inner bean -->
+	</property>
+	</bean>
+</beans>
+
+Charecterstics of an InnerBean :-
+******************************
+=>An InnerBean does not needs id value.
+=>An InnerBean can not be accessble outside the outer bean.
+=>How many time's an outerbean instantiated those many times the  innerbean can be instantiated.
+=>The default scope of an innerbean is "prototype".
+
+Procedure :-
+***********
+
+	Step 1:-
+	*******
+	Click on Eclipse ,Select the WorkSpace. Withing the Selected Workspace the programs will be stored.
+
+	Step 2 :- 
+	*******
+	Goto => File => New => Others => Select Java Project => Click on Next => Project Name : ContextDemoApp => Click On Finish.
+
+	It will be showing an alert window click on "OK".
+
+	One this is done on the Left side we can find "ContextDemoApp" Project .
+
+	Step 3 :-
+	******
+	   Extend the "ContextDemoApp" Project we can find the "src" folder.
+
+		Copy the "beans.xml" paste it under "src" folder.
+	
+		Rename the "beans.xml" file as "applicationContext.xml".
+
+
+	Step 4 :-
+	*******
+	Add the jar files to the Project.
+	
+	Here to work with "ApplcationContext" we need to add following two jar files additionally along with previous jars.
+
+		context.jar
+		context-support.jar
+
+	RightClick on =>"ContextDemoApp" project =>Build Path =>Configure BuildPath =>Click on "Libraries" on the Window => Click on "add extenal jars" => Select specified jars from System.
+
+	Step 5 :-
+	******
+	Right Click on "src" folder =>New => Class =>
+	Package Name : com.nit
+	Class   Name : HelloBean
+	Click on Finish.
+
+
+Open applicationContext.xml file.
+
+
+	Step 6 :-
+	******
+Right Click on "src" folder =>New => Class =>
+	Package Name : com.nit
+	Class   Name : HelloBeanApp
+	Click on Finish.
+
+
+To Run the application :-
+***********************
+Right Click on  HelloBeanApp => Run as => Java Application.
+
+=>Observe the output the ApplicationContext creates the "HelloBean" object while reading the configuration file itself.
+
+=> Because the <bean> tag "lazy-init" attribute value by default is "false" so that SpringContainer creates the springbean object eagerly.
+
+=>If make "lazy-init" value as true ApplicationContext does not create the springbean object until we make a request.
+
+<bean id="hbid" class="com.nit.HelloBean" 
+lazy-init="true">
+</bean>
+
+************************************************
+
+
+Understanding BeanPostProcessor :-
+*******************************
+=>The org.springframework.beans.factory.config.BeanPostProcessor is an interface.
+
+=> The BeanPostProcessor can be used to implement PreProcessing and PostProcessing Logics.
+
+=>PreProcessing Logic :-
+  ********************
+	The logic which is to be executed before the initilization of a SpringBean.
+
+=>PostProcessing Logic :-
+  ********************
+	The logic which is to be executed after the initilization of a SpringBean.
+
+
+=> The BeanPostProcessor contains two abstract methods which can be used to implement PreProcessing and PostProcessing logics.
+
+=> public Object postProcessBeforeInitialization(Object springBean,String idValue) throws BeansException
+
+This method will automatically called by the SpringCotainer after the dependency injection. 
+Within this method we will implement Pre Processing Logic.
+
+=> public Object postProcessAfterInitialization(Object springBean,String idValue) throws BeansException
+
+This method will automatically called by the SpringCotainer after initializing the spring bean. 
+Within this method we will implement Post Processing Logic.
+
+
+In above both methods first parameter is "SpringBean Object" and the second parameter is "SpringBean Id value".
+
+These two will automatically passed by the SpringContainer while calling the method.
+
+EmpPostProcessorApp.java
+*************************
+ApplicationContext context = 
+new ClassPathXmlApplicationContext("applicationContext.xml");
