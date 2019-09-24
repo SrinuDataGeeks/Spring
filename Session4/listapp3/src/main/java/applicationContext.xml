@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    https://www.springframework.org/schema/beans/spring-beans.xsd 
+    http://www.springframework.org/schema/util
+    https://www.springframework.org/schema/util/spring-util.xsd">
+
+	<bean id="pid1" class="com.datageeks.beans.ProductBean"
+		p:productId="111" p:productName="Lenovo" p:productPrice="1500f" />
+
+	<bean id="pid2" class="com.datageeks.beans.ProductBean"
+		p:productId="222" p:productName="Apple4S" p:productPrice="25500f" />
+
+
+	<bean id="pid3" class="com.datageeks.beans.ProductBean"
+		p:productId="333" p:productName="onePlus" p:productPrice="35000f" />
+
+	<util:list id="plistid">
+				<ref bean="pid1" />
+				<ref bean="pid2" />
+				<ref bean="pid3" />
+				<ref bean="pid2" />
+				<ref bean="pid3" />
+	</util:list>
+
+	<bean id="sampleBeanId" class="com.datageeks.beans.SampleBean" p:productList-ref="plistid"/>
+		
+
+</beans>
+    

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean id="sampleBeanId" class="com.datageeks.beans.SampleBean">
+<property name="userNames" >
+<list>
+<value>Srinu</value>
+<value>Naresh</value>
+<value>Kiran</value>
+<value>Venkat</value>
+</list>
+
+</property>
+</bean>
+
+</beans>
+    

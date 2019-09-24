@@ -1,0 +1,209 @@
+How to pass array of values from the bean configuration file ....?
+*******************************************
+=> We can make use of "<list>" tag to pass the array of values from the bean configuration file.
+
+Working with Collections :-
+*************************
+=> Collections are mainly used to maintain huge amount of data over the network.
+
+java.util.List
+***************
+=> List is an index based.
+=> List maitains the insertion order.
+=> Allows duplicate elements.
+=> Allows any type of data.
+=> The data within the List is non synchronized.
+
+=> List is an interface . ArrayList and LinkedList are the implementation classes of "List".
+Understnding  "p" namespace :-
+****************************
+
+=> "p" namespace can be used to configure the Setter-Injection.
+
+=> "p" namespace is an attribute of "<bean>" tag.
+
+=> If the dependency is of primitive type we can use "p" namespace as "p:propertyName=Value".
+
+	Ex:  p:countryName="INDID".
+
+=> If the dependency is of userdefined type we can use "p" namespace as "p:propertyName-ref=IdValue".
+
+	Ex:  p:stateBean-ref="stateId".
+
+=> Developing an application which can write Product data into a file.
+
+Product.java (take it from previous app).
+
+Store.java
+**********
+
+<!-- Note :- To work p namespace we shoud add "p" 
+namespace within the <beans> tag.
+In <ref> we can use either "local" or "bean" attributes to
+specify the id value.
+=>"local" attribute checks the id value within the current 
+configuration file only.
+=>"bean" attribute first checks the id value within the current 
+configuration file if not found then checks in other 
+configuration file.
+ -->
+ 
+  FlipkartApp.java
+ AppCode :-
+ 
+ ClassPathXmlApplicationContext context=
+	new ClassPathXmlApplicationContext("applicationContext.xml");
+	Store bean=context.getBean(Store.class);
+	bean.storeProductsData();
+context.registerShutdownHook();//destory's all the SpringBeans
+
+******************************************
+java.util.Set :-
+*************
+=>Set is an interface we have implementation classes as "HashSet" ,"LinkedHashSet","TreeSet".
+=>Set does not allows duplicate elements.
+=>Set is not an index based.
+=>Set allows nullable values.
+=>Set data is not sychronized.
+=>HashSet does not maintains insertion Order , this can be achieved using "LinkedHashSet".
+=>Set can allow any type of data.
+=>If we consider with TreeSet.	
+	TreeSet allows only Integer values.
+	The TreeSet can arrange the data in assending order by default.
+
+=>TreeSet won't  allows nullable values.
+
+=>To configure "java.util.Set" dependency we can make use of "<set>" tag.
+
+=> If the "java.util.Set" contains primitive type configure using "<value>" tag otherwise make use of "<ref>" tag.
+
+
+=> Note: -
+	Modify the FlipkartApp and make use of "Set".
+
+java.util.Map
+*************
+=> Map is an interface the inplementation classes of "java.util.Map" are "HashMap","LinkedHashMap","TreeMap".
+
+=>Map contains key and value pairs.
+
+HashMap:-
+*******
+=>Allows any type of key and value.
+=>Allows nullable keys and nullable values.
+=>Does not maintains the insertion order.
+=>Deos not allows duplicate key's but allows duplicate values.
+=> Data is not Synchronized.
+
+LinkedHashMap :-
+*************
+The only difference between HashMap and LinkedHashMap is ,
+	HashMap does not maintains insetion order where as LinkedHashMap maintains the insertion order.
+
+
+TreeMap :-
+********
+=>Allows only integer key's and value can be anything.
+=>Does not allows nullable key's but allows nullable values.
+=>Maintains the data in assending order based on key.
+
+java.util.Map methods :-
+*************
+
+public Set<K> keySet() :- This method returns set of keys.
+public V  get(K) :- Map object returns value based on key.
+
+Sample Code :-
+***********
+Map<String,Float> map=new HashMap<String,Float>();
+map.put("Laptop",45000.50);
+.....
+.....
+Set<String>  setOfKeys = map.keySet();
+for(String key:setOfKeys)
+{
+Sysout(key+"\t"+map.get(key));
+}
+
+
+=> The "java.util.Map" dependcy can be configured using "<map>" tag.
+
+=> Within the "java.util.Map" every key and value pair can be configure using "<entry>" tag.
+
+Map<String,String>
+******************
+<map>
+<entry key="Srinu" >
+	<value> B.Tech </value>	
+</entry>
+<entry key="Arup" >
+	<value> M.Tech </value>	
+</entry>
+....
+</map>
+
+Map<Integer,Product>
+*********************
+<map>
+<entry key="111" >
+	<ref bean="pid1" />	
+</entry>
+<entry key="222" >
+	<ref bean="pid2" />	
+</entry>
+....
+</map>
+
+
+Map<Product,Store>
+******************
+<map>
+<entry key-ref="pid1" >
+	<ref bean="storeId1" />	
+</entry>
+<entry key-ref="pid2" >
+	<ref bean="storeId2" />	
+</entry>
+....
+</map>
+
+
+
+HelloBeanApp.java
+****************
+HelloBean bean=	context.getBean(HelloBean.class);
+	bean.getData();
+
+java.util.Properties:-
+*********************
+=>Properties class contains key and value pairs.
+=>Properties class does not allow generic. By default the Properties class key and value pairs are in "String" type.
+=>Properties class allows nullble keys and nullable values.
+=>Properties class does not allow duplicate keys but allows duplicate values.
+=>Properties class does not maintains insetion order.
+
+=>The main use of "java.util.Properties" class is , it can read the data from the Properties file.
+
+=> Create a Java Project in Eclipse.
+	Right Click on src => Others => type "File" =>
+	Select File => Next => FileName : 		dbInfo.properties => Finish.
+
+
+=> Open dbInfo.properties 
+	
+	userName = System
+	password = Tiger
+
+=> The java.util.Properties can be configured in Spring using <props> tag.
+
+=> With the <props> tag we can use <prop> tag to define key and value pair.
+
+	<props>
+<prop key="Employees">Srinu Akash</prop>
+<prop key="Managers">Sandeep Arup Sakthi</prop>
+....
+	</props>
+
+HelloBeanApp.java
+***************
+Same as in previous app.

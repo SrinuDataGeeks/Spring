@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean id="pid1" class="com.datageeks.beans.ProductBean">
+<property name="productId" value="111"></property>
+<property name="productName" value="Lenovo"></property>
+<property name="productPrice" value="15000f"></property>
+</bean>
+
+<bean id="pid2" class="com.datageeks.beans.ProductBean">
+<property name="productId" value="222"></property>
+<property name="productName" value="Apple"></property>
+<property name="productPrice" value="25000f"></property>
+</bean>
+
+
+<bean id="pid3" class="com.datageeks.beans.ProductBean">
+<property name="productId" value="333"></property>
+<property name="productName" value="MotoG"></property>
+<property name="productPrice" value="18000f"></property>
+</bean>
+
+<bean id="sampleBeanId" class="com.datageeks.beans.SampleBean">
+<property name="productList">
+	<list>
+	<ref bean="pid1"/>
+	<ref bean="pid2"/>
+	<ref bean="pid3"/>
+	</list>
+</property>
+</bean>
+
+</beans>
+    
