@@ -1,0 +1,414 @@
+		Understanding Autowiring :-
+		************************
+=> Autowiring  is a concept of injecting the dependencies into the dependents by the the SpringContainer implicitly.
+
+=> Autowiring can be enabled within a SpringBean using "autowire" attribute of a <bean> tag.
+
+=>The autowire "attribute" can be specified in four ways
+		
+	default	
+	byName
+	byType
+	constructor
+
+autowire="default" :-
+*******************
+	It is bydefault enabled . If autowire="default" then springcontainer deos not perfroms autowiring.
+
+autowire="byName" :-
+*******************
+	If autowire="byName" then the dependency instance variable name and dependency id value should be same.
+	Then only SpringContainer perfroms autowiring otherwise does not performs dependency injection.
+
+
+Here autowire="byName" so that the "StateBean" 
+Instance variable name with the CountryBean and the 
+StateBean id value should be same.
+
+AppCode :-
+*********
+CountryBean	bean = context.getBean(CountryBean.class);
+		bean.getService();
+
+********************
+
+autowire="byType" :-
+******************
+Here the SpringContainer does not considers the name of the dependency . Considers the type of the dependency .
+
+applicationContext.xml
+*********************
+<beans ...>
+<bean id="stateId" class="com.nit.StateBean">
+</bean>
+ <bean id="countryId" class="com.nit.CountryBean"  
+ autowire="byType">
+ </bean>
+</beans>
+
+Note :-
+*****
+	If we configure StateBean more than one within the applicationContext.xml file.
+	SpringContainer founds two object's with the same type so that throws an Exception.
+
+**"byType" can be applicable for Setter-Injection.
+
+autowire="constructor" :-
+**********************
+Same as "byType". If we use autowire="constructor" SpringContainer performs Constructor-Injection.
+
+Limitation of a autowiring :-
+***************************
+autowiring can be applied only for userdefined types,can not be applied for premitive type's.
+
+		Internationlization :-
+		********************
+=> Internationlization is a concept of chaging the label names of formpage based on the language request.
+
+=> In Java a language can be represented by "java.util.Locale" object.
+
+=> Every language contains it's own unique language code.
+	Ex:-
+		For telugu language code is "te"
+		For hindi language code is "hi"
+		For english language code is "en"
+	etc..
+
+=> If the language speaks in morethan one country ,we can differenctiate them using country code.
+=>Allways the countrycode in Uppercase and the Language code in lowyercase.
+
+	Ex :-
+	****
+	  English of United states : US_en
+	  English of INDIA         : IN_en 
+	etc..
+
+=> The java.util.Locale objct can be created in two ways.	
+	public Locale(String langCode)
+
+	Ex: Locale l1=new Locale("te");
+
+	public Locale(String countryCode,String languageCode)
+	Ex: Locale l2=new Locale("US","en");
+
+*************************************************
+Procedure to work with Internationlization :-
+******************************************
+1. Develop a ResourceBundle for every laguage. 
+
+2.Take all the ResourceBundle's basename is same and every ResourceBundle should be defferentiated with the "Locale".
+
+3.In  all the ResourceBundles defines  key name's as same and define value's in there specific language.
+
+4.Confiure the basename within the applicationContext.xml file using "ReloadableResourceBundleMessageSource" class.
+
+5.Within the application make use of SpringContainer i.e ApplicationContext to get the values from the ResourceBundle.
+
+org.springframework.context.support.ReloadableResourceBundleMessageSource
+*****************************************************
+
+=> ReloadableResourceBundleMessageSource is a predefined class given by Spring.
+
+=>Which can able to load the ResourceBundle into the memory and make it avaliable to the SpringContainer.
+
+=> The ReloadableResourceBundleMessageSource class id value should be "messageSource" otherwise ApplicationContext can not recognize it.
+
+******************************************************
+=> The ApplicationContext has given following method to get the value from the ResourceBundle.
+
+public String getMessage(String ,Object[],Locale);
+
+=>1st parameter indicates the ResourceBundle keyname.
+=>2nd paramter can be used to pass the values to the placeholders .
+=>3rd parameter specifies the "Locale".
+
+***************************************************
+Application :-
+************
+	Develop the following properties files within the "src" folder.
+
+ApplicationResources_en.properties
+***********************************
+welcome =Good morning to all From English: Date is {0}
+
+ApplicationResources_hi.properties
+***********************************
+welcome =Suprabhat From Hindi: Date is {0}
+
+ApplicationResources_te.properties
+***********************************
+welcome = Subodayamu From Telugu: Date is {0}
+
+
+These properties files can be called as ResourceBundle's.
+
+applicationContext.xml
+**********************
+<beans ..>
+
+<bean id="messageSource" 
+class="org.springframework.context.support.
+ReloadableResourceBundleMessageSource">
+<property name="basename" value="ApplicationResources"></property>
+</bean>
+ 
+</beans>
+
+=>AwareInterfaces in Spring :-
+  *************************
+ApplicationContextAware :-
+
+	=>The ApplicationContextAware interface containes an abstract method as 
+
+public abstract void setApplicationContext(ApplicationContext context);
+
+	If we override this method within our SpringBean we can get the ApplicationContext reference.
+
+
+
+BeanNameAware :
+**************
+	The BeanNameAware interface can contains following abstract method this can be used to get the id value of the SpringBean
+	public abstract void setBeanName(String id);
+
+SpringBean inheritance :-
+***********************
+=>SpringBean inheritance is a concept of reusing the parent bean properties into the child bean.
+
+=>What ever properties which are common within springbean we will configure them into a parentbean.
+
+=> We can inherit them  into a child bean using "parent" attribute of a <bean>  tag.
+
+=> If we make  "<bean>" tag "abstract" attribute value as "true". SprinContainer does not create the SpringBean object.
+
+
+=> we can override the parent properties into the 
+child bean.
+
+AppCode :- SpringBeanIhnApp.java
+*******
+StudentBean bean1 = context.getBean("sid1", 
+		StudentBean.class);
+StudentBean bean2 = context.getBean("sid2", 
+		StudentBean.class);
+System.out.println("\n\n Student 1 data "+bean1);
+System.out.println("\n\n Student 2 data "+bean2);
+
+Note :-
+******
+Here we cinfigured two StudentBean objects so that we should use overloaded getBean(String,Class) method.
+
+******************************************************
+
+PropertyPlaceholderConfigurer :-
+*****************************
+
+=> The PropertyPlaceholderConfigurer can able to load the data from the properties file and configure it in bean configuration file.
+
+=> Whatever data which is frequently modified should not be hardcoded within the "bean" configuration file.
+
+=>Should get the data from the properties file.
+
+org.springframework.beans.factory.config.PropertyPlaceholderConfigurer contains a "setter method" as
+
+"public void setLocation(String)" :- This can be used to configure the properties file.
+
+=>Within the bean configuration file we need to make use of placeholders i.e "${}" to get the data from properties file.
+
+=> Within the palceholder if we specify the key name  which is configured in properties file ,value will be loaded by the "PropertyPlaceholderConfigurer" class.
+
+HelloBeanApp.java
+****************
+
+AppCode :-
+*********
+HelloBean bean = context.getBean(HelloBean.class);
+System.out.println("\n\n HelloBean data "+bean);
+
+=>Spring3.x has given contextNamespace.
+=>Using contextNamespace we can load the data from the properties file.
+
+=> To work with "context" namespace we need to add the "context:Namespace" and "context:schemaLocation" within the beans tag.
+
+=> Modify the applicationContext.xml file so as to make use of "context" namsespace.
+
+Working with annotations :-
+************************
+=> Spring has given Stereotype annotations .
+=> If we are making use of Stereotype annotations we no need configure the bean within the bean configuration file.
+=>All these stereotype annotations are available in 
+"org.springframework.stereotype" package.
+
+@Controller => Applied for controller beans.
+@Service    => Applied for Service Beans
+@Repository => Applied for DAO Beans
+@Component  =>We can apply this for any bean.
+
+=>If the SpringBean contains any primitive type dependency we can configure them using @Value annotation.
+
+=> The @Value annotation is vailable in 
+org.springframework.beans.factory.annotation package.
+
+=> To work with annotation within the bean configuration file we need to specify the "base-package" using "<context:component-scan>" tag.
+
+=>Ex:- <context:component-scan base-package="com.nit">
+</context:component-scan>
+
+So that SpringContainer can look at the beans which were presented in "com.nit" package and it's child packages.
+
+Modify the Properties application and making use of annotions.
+*****************************************************
+DBInfo.properties
+HelloBeanApp.java take these two files from previous application.
+
+applicationContext.xml
+*********************
+
+@Autowired  :-
+***********
+=> To get the dependecies within the SpringBean we can make use of @Autowired  annotation.
+
+=> @Autowired annotation can be on Field Level,Setter Method Level and Constructor Level.
+
+=>If we apply @Autowired annotation on the Field Level we no need to write the Setter method.
+
+=>Bydefault for the @Autowired annotation "required" attribute is true.
+	Ex: @Autowired(required=true)
+=>So that if we don't confgigure the dependency SpringContainer throws exception.
+
+**************************
+
+CountryApp.java
+***************
+CountryBean bean = context.getBean(CountryBean.class);
+bean.getService();
+TransferApp.java
+*****************
+
+TransferController bean = context.getBean(TransferController.class);
+		bean.invokeTransfer();
+
+=> @PostConstruct :- 
+   **************
+	This annotation can be used to declare the initialization method.
+
+@PreDestroy :- 
+**************
+	This annotation can be used to declare the destroy method.
+
+	These two annotations are available in javax.annotation package.
+
+=> Two work with these annotations we need to add following two jar files additionally in buildpath.
+
+annotations-api.jar
+cglib.jar
+
+
+HelloBeanApp.java
+******************
+ClassPathXmlApplicationContext context = 
+		new ClassPathXmlApplicationContext("applicationContext.xml");
+		HelloBean bean = context.getBean(HelloBean.class);
+		bean.getService();
+		context.registerShutdownHook();
+
+**************************************************
+Using Configuration annotations :-
+*******************************
+=>If we are using Configuration annotations we no need to develop a applicationContext.xml file.
+
+=>Instead of that we will develop a Configuration class.
+
+=> @Configuration :-
+   ***************
+	Used to configure the Configuration class.
+
+=> @Bean :-
+   *****
+	Used to configure the bean within the Configuration class.
+
+
+=> To workwith Configuration annotations we should take "AnnotationConfigApplicationContext" as a SpringContainer.
+
+=>StateBean.java
+=>CountryBean.java
+	take them from previous applicattion
+
+=>CountryConfiguration.java
+
+@Import :-
+*******
+@Import  annotation can be used to import other module configuration classes into the main configuration class.
+
+Ex:-
+***
+@Import({CountryConfiguration.class , StateConfiguration.class })
+
+Notable Points :-
+***************
+@Required :-
+**********
+@Required checks wheather depency configured or not.
+If the dependency is not configured throws exception.
+
+By default @Autowired(required=true) so that if we apply @Autowired we no need to apply @Required annotation.
+
+
+@Qualifier :-
+**********
+By default @Autowired annotation performs byType dependency injection.
+
+For Ex: If we configure same dependency more than once within the configuration file then SpringContainer throws an exception.
+
+To avoid this abguity we can make use of @Qualifier annotation.
+
+For Ex:-
+*********
+<beans ..>
+...
+<bean id="s1" class="com.nit.SampleBean">
+</bean>
+
+<bean id="s2" class="com.nit.SampleBean">
+</bean>
+
+</beans>
+
+@Component
+public class HelloBean
+{
+	@Autowired
+	@Qualifier(value = "s1")
+private SampleBean sampleBean = null;
+....
+}
+
+<import> tag :-
+************
+
+<import> tag can be used to import other module context files into a main context file.
+
+applicationContex.xml
+*********************
+
+	<beans ..>
+<context:component-scan base-package="com.nit">
+</context:component-scan>
+<import resource="mvc-applicationContext.xml" />
+<import resource="dao-applicationContext.xml" />
+	</beans>
+
+c:nameSpace :-
+************
+	c: nameSpace can be used to configure Constructor Injection.
+
+
+@Scope :-
+******
+This annotation can be used to specify scope of the SpringBean.
+		@Component
+		@Scope("prototype")
+	class	 Sample
+		{
+		.....
+		}
