@@ -1,0 +1,196 @@
+		Spring-JDBC-DAO  module :-
+		***************
+=>Spring-JDBC-DAO  module can be used to implement DataAccessLayer using JDBC Technology.
+
+=>The DataAccessLayer can be implemented using DAO-Design pattern.
+
+DAO Design Pattern princeples:-
+*****************************
+=> Represent the relational table in the form of Object Orientation.
+
+	
+=>Make use of javax.sql.DataSource Object to get the connection. Make sure that the DataSource object should be a singleton Object.
+
+=> Make use of DAO classes for implementing database interaction logic.
+
+=> Data Accessn Object (DAO) class is a java class which contains only the database interaction logic.
+
+public class EmployeeDAO
+	{
+public void saveEmployee(Employee emp){
+....
+... DBInsertion Logic
+}
+
+public Employee getEmployeeById(Integer empId)
+{
+.....
+.... // DB Selection logic
+}
+
+public boolean deleteEmployeeById(Integer empId){
+.......
+.......//DB Deletion logic
+}
+
+public void updateEmployee(Employee emp)
+{
+....
+....// DB Updation logic
+}
+	}
+
+=> Spring JDBC-DAO module has given "JdbcTemplate" for developing database interaction logic.
+
+=> The "org.springframework.jdbc.core.JdbcTemplate" takes "javax.sql.DataSource" as a dependency.
+
+=>"JdbcTemplate" Constrcutors :-
+  ****************************
+	public JdbcTemplate() :- In this case we need to pass "DataSource" object using Setter-Injection.
+
+=>JdbcTemplate contains following Setter-Method to get the "DataSource" as the dependency.
+	public void setDataSource(DataSource ds)
+
+
+public JdbcTemplate(DataSource ds) :- In this case we need to pass "DataSource" object using Constructor-Injection.
+
+
+public JdbcTemplate(DataSource ds,boolean flag) :- If we keep second parameter value as false "JdbcTemplate" does not performs exception handling.
+
+JdbcTemplate does the following jobs :-
+**************************************
+=> Get's the "java.sql.Connection" Object from the datasource.
+=>Creates a Statement Object.
+=>binds the parameters.
+=>submits the query.
+=>returns the result.
+=>Handles the exceptions.
+=>Releases the resources.Ex: closing Connection,Statement object's etc..
+
+Working with Non-Select Quaries :-
+*******************************
+Spring JdbcTemplate has given overloaded update(..) methods to workwith non-select quaries.
+
+
+public int update(String sql)  throws DataAccessException :-
+********************
+This method can be used if the sql quary does not contains any parameters.
+
+
+
+public int update(String sql,Object args...)throws DataAccessException :-
+*********************
+This method can be used if the sql quary  contains any parameters.
+
+Here the update(..) method second parameter is "var-args".
+
+The Var-args is newly introduced in java 1.5. 
+
+The Var-args is just like an Object[] array , can accept any type of data.
+
+Ex:-
+****
+jdbcTemplate.update("insert into Employee Values(?,?,?)",1242,"Srinu",7000f);
+
+*********************************************
+Procedure to implement DataAccessLayer Using Spring-JDBC-DAO module :-
+
+1. Configure DataSource and JdbcTemplate within the applicationContext.xml file.
+
+2.Take the JdbcTemplate as a dependency within the DAO class.
+
+3.Within the DAO class make use of JdbcTemplate api for implementing database interaction logic.
+******************************************************
+
+=> The "org.apache.commons.dbcp.BasicDataSource" is an implementation class of "javax.sql.DataSource".
+
+
+The "BasicDataSource" has given following setter methods to pass the "DB information".
+
+public void setDriverClassName(String)
+public void setUrl(String)
+public void setUsername(String)
+public void setPassword(String)
+**************************************************
+
+sql script :-
+********* 
+Drop Table Employee;
+Create Table Employee(EMP_ID number(10) Primary Key , EMP_NAME varchar2(20),EMP_SAL number(10,2));
+
+Callback Interfaces :-
+*******************
+
+=> SpringFramework has given Callback Interfaces.
+=> Callback Interfaces can share the job of JdbcTemplate.
+=> Callback Interfaces reduces the burdden on the JdbcTemplate.
+
+org.springframework.jdbc.core.PreparedStatementCreator :-
+******************************************************
+
+PreparedStatementCreator does the following jobs.
+
+=> Creates a PreparedStatement object.
+=> Bind the paremeters .
+=> Returns the PreparedStatement Object to the JdbcTemplate.
+
+The PreparedStatementCreator contains following abstract method.
+
+public abstract PreparedStatement  createPreparedStatement(Connection  con) throws SQLException :-
+
+This method is automatically called by the "JdbcTemplate" by passing Connection object.
+
+To work with PreparedStatementCreator , "JdbcTemplate" has given following update(..) method.
+
+
+public int update(PreparedStatementCreator) throws DataAccessException
+
+EmployeeBean.java
+appliationContext.xml
+DBInfo.properties take these files From 1st application.
+
+EmployeeApp.java
+****************
+......
+......
+EmployeeBean emp = new EmployeeBean();
+emp.setEmpNo(1236);
+emp.setEmpName("Santosh");
+emp.setEmpSal(25000f);
+
+EmployeeDAO dao = context.getBean(EmployeeDAO.class);
+dao.registerEmployee(emp);
+
+System.out.println("\n\n Employee Registration  is Sucessfull completed");
+
+
+***************************************************
+org.springframework.jdbc.core.PreparedStatementSetter :-
+
+=> PreparedStatementSetter bind the parameters.
+=> The PreparedStatementSetter contains following abstract method.
+
+public abstract void setValues(PreparedStatement ps) throws SQLException
+
+=> This method is automatically called by JdbcTemplate by passing "PreparedStatement" object.
+
+=> To work with "PreparedStatementSetter" the "JdbcTemplate" has given following update(..) method.
+
+public int update(String sql,PreparedStatementSetter pst) throws DataAccessException 
+
+
+SampleCode :-
+**********
+String sql = "insert into Employee values (?,?,?)";
+jtemplate.update(sql , new PreparedStatementSetter()
+			{
+public void setValues(PreparedStatement ps) throws SQLException
+{
+ps.setInt(1, emp.getEmpNo());
+ps.setString(2, emp.getEmpName());
+ps.setFloat(3, emp.getEmpSal());
+}
+			}
+		); //update(..) method
+
+**********************
