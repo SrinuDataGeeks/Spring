@@ -1,0 +1,201 @@
+Fetching the Data From database :-
+*********************************
+For Selecting the data from the database , JdbcTemplate has given overloaded query(..) methods.
+
+=> For Fetching the data we make use of following callback interfaces.
+
+	**ResultSetExtractor
+	**RowCallbackHandler
+	**RowMapper
+=>org.springframework.jdbc.core.ResultSetExtractor<T> 
+****************************************
+	In ResultSetExtractor<T> the represents Generic Type.
+
+	=>According to DAO Design Pattern we need to represent relational table in the form of Object Orientation.
+
+	=>So one record of a table can be represented by one java class object.
+
+	=>If we use Jdbc , the jdbc technology returns the data in the form of ResultSet Object.
+
+	=>So the table record is available within the ResultSet row.
+
+	=>As a result one row of a ResultSet can represents one java class object.
+
+	Ex:-
+	***
+1. Generic type to select Single Employee Record From table using ResultSetExtractor<T>.
+
+ResultSetExtractor<EmployeeBean>
+
+2. Generic type to select multiple Employee Records From table using ResultSetExtractor<T>.
+
+ResultSetExtractor<List<EmployeeBean>>
+
+
+
+=> The ResultSetExtractor<T> contains following abstract method.
+
+	public abstract T extractData(ResultSet rs) throws SQLException, DataAccessException
+
+
+=> This method is automatically called by the JdbcTemplate by passing ResultSet object.
+
+=> To work with "ResultSetExtractor<T>" the "JdbcTemplate" has given following overloaded query(..) methods.
+
+	public T  query(String,ResultSetExtractor<T>) :- This method can used if the sql query does not contains positional parameters.
+
+public T  query(String,Object[],ResultSetExtractor<T>) :-
+When the sql query contains a positional parameters we will pass then using "Object[]" array.
+
+EmployeeApp.java
+****************
+EmployeeDAO dao = context.getBean(EmployeeDAO.class);
+System.out.println("\n\n All the Employees Info ");
+
+List<EmployeeBean> empList = dao.getEmployeesData();
+
+for(EmployeeBean emp:empList){
+	System.out.println(emp.getEmpNo() +"\t"+emp.getEmpName()+"\t"+emp.getEmpSal());
+}
+
+System.out.println("\n\n Selecting Employee By Id");
+
+EmployeeBean emp = dao.getEmployeeById(1242);
+if(emp != null){
+	System.out.println(emp.getXXX());
+}
+else
+	{
+	System.out.println("\n\n Employee Details are not found");
+}
+
+RowCallbackHandler :-
+*****************
+The "org.springframework.jdbc.core.RowCallbackHandler" contains an abstract method as :
+
+public abstract void processRow(ResultSet rs) throws SQLException
+
+=>This method will be called by the JdbcTemplate for every row of a ResultSet object.
+
+=>So that we no need to write the iteration logic.
+
+To Workwith "RowCallbackHandler" , the "JdbcTemplate" has given following overloded query(...) methods.
+
+public void query(String,RowCallbackHandler) throws DataAccessException
+
+public void query(String,Object[],RowCallbackHandler) throws DataAccessException
+
+EmployeeDAO.java
+****************
+
+EmployeeApp.java
+*****************
+EmployeeDAO dao = context.getBean(EmployeeDAO.class);
+
+System.out.println("\n\n All the Employees Info ");
+List<EmployeeBean> empList = dao.getEmployeesData();
+for(EmployeeBean emp:empList){
+	System.out.println(emp.getEmpNo()+"\t"+emp.getEmpName()+"\t"+emp.getEmpSal());
+}
+
+
+RowMapper<T> :-
+************
+=> The "org.springframework.jdbc.core.RowMapper<T>" contains following abstract method as 
+
+	public abstract T mapRow(ResultSet rs,
+int indexNo)throws SQLException
+
+=> This method will be called by the "JdbcTemplate" for every record of a "java.sql.ResultSet".
+
+=>Here within the mapRow(..) method the 2nd parameter indicates the index number of a "java.util.List".
+
+=> If we use RowMapper<T> 
+	** We no need to iterate the ResultSet.
+	** We no need to add the Object to the "List".
+
+These both jobs will be done by the RowMapper<T> itself.
+
+To Workwith "RowMapper<T>" , the "JdbcTemplate" has given following overloded query(...) methods.
+
+1.public List<T> query(String,RowMapper<T>) throws DataAccessException 
+
+2.public List<T> query(String,Object[],RowMapper<T>) throws DataAccessException
+
+The above two methods can be used to select more than one record.
+
+
+
+3.public T queryForObject(String,RowMapper<T>) throws DataAccessException
+
+4.public T queryForObject(String,Object[],RowMapper<T>) throws DataAccessException
+
+The above two methods can be used to select single record.
+
+EmployeeApp.java
+DBInfo.properties
+applicationCotext.xml take these files from ResultSetExtractor Application.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
