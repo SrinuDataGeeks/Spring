@@ -1,0 +1,66 @@
+Understanding the JdbcTemplate Utility Methods :-
+**********************************************
+=> From Spring 3.x onwards JdbcTemplate has given utility methods.
+=>If we make use of them we can directly get's the data from the database.
+
+public int queryForInt(String ) throws DataAccessException
+
+=> Returns single row ,single column integer value.
+
+=>If the query returns either single row with multiple columns or multiple rows with single column Spring throws an exception.
+
+
+
+public T  queryForObject(String , Class<T> ) :-
+public T  queryForObject(String ,Object[] , Class<T>  )
+These methods can be used to get any type single row and single column values.
+
+Here we need to specify class type.
+
+Ex:  public String queryForObject("Select EmpName From Employee where empId=1242",String.class);
+
+queryForObject(..) throws an exception even the query does not returns the data.
+queryForObject(..) throws an exception if we query returns more than one record.
+
+
+public Map<String,Object> queryForMap(String)
+public Map<String,Object> queryForMap(String ,Object...) :-
+***************
+=> These methods can be used to select single row from the table.
+
+=> The JdbcTemplate returns the table row in the form of Map<String,Object> object.
+
+=> Here the Map<String,Object> object key is colum_name and the value is the column_value.
+
+for Ex :-
+********
+
+Map<String,Object> map = jdbcTemplate.queryForMap("Select * From Employee where empNo=1242");
+
+
+In case if the query returns morethan one record then the JdbcTemplate throws Exception.
+
+
+
+public List<Map<String,Object>> queryForList(String )
+public List<Map<String,Object>> queryForList(String ,Object...) :-
+************************
+=> These methods can be used to select more than one record.
+
+Batch Processing :-
+****************
+=> Batch Processing is a concept of submiting group of non select queries to the database at the same time.
+
+=> While performing batch processing we should takecare about the TrasactionManagement.
+
+=> In a Batch Processing if any one of the sql statement is faile we should rollback the complete transaction.
+
+=>To work with BatchProcessing "JdbcTemplate" has given following upate(..) method.
+
+	public int[] batchUpdate(String[] ) throws DataAccessException
+
+Sample Code :-
+***********
+String sql1 = "insert into Employee values (1254 ,'Tirumal',35000f)";
+String sql2 = "update Employee set empSal=40000 where empNo=1242";
+jdbcTemplate.batchUpdate(new String[]{sql1,sql2});
