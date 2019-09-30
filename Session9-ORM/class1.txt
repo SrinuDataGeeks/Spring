@@ -1,0 +1,174 @@
+		Spring ORM
+		**********
+Object Relational Mapping (ORM):-
+******************************
+ORM is a cocept of represent the relational table in the form of ObjectOrientation and maintains the synchronization between them.
+
+	Maintaning synchronization means if we do the modification in the java class object those changes will be reflected on the table record and vice versa.
+
+Hibernate is a ORM tool.
+
+Overview of Hibernate :-
+*********************
+=> 1. When the DAO class makes a Hibernate API Call which will be traped by Hibernate Engine.
+
+=> 2. Hibernate Engine understands the Persistence class,Database table information by reading mapping file  and understands the DBinformation such as username , password ,url , driver class using Configuration file.
+
+=> 3. Generates the SQL Query based on the API Call.
+
+=> 4. Submit to the database table using "JDBC" Technology but it was completly abstracted from Hibernate Application.
+
+		Hibernate Architecture :-
+		***********************
+
+
+	     Hibernate Architecture:-
+	*********************************
+
+org.hibernate.cfg.Configuration :-
+******************************************
+=> This is a java class given by Hiberante Framework.
+=> When we create a Configuration object the HibernateEngine will be actived.
+=> This Configuration class can load the mapping files,configuration file into the memory and make it available to the HibernateEngine.
+
+Configuration configuration = new Configuration();
+configuration.configure("hibernate.cfg.xml");
+
+org.hibernate.SessionFactory :-
+****************************
+=> Hibernate gives implicit connection pooling.
+=> In Hibernate the Connection pooling will be represented by "SessionFactory".
+=> SessionFactory is a heavy weight object. We should make the "SessionFactory" object as singleton object.
+
+	SessionFactory  factory = configuration.buildSessionFactory();
+
+org.hibernate.Session :-
+*********************
+=> In hibernate the "org.hibernate.Session" can be act as a mediater between the hibernate persistence logic and the database table.
+
+=> "org.hibernate.Session" object will be given by the SessionFactory.
+
+	Session  session = factory.openSession();
+
+When we call openSession() method on the SessionFactory  then the SessionFactory picks the connection object from the connection pool , intercepts into the "Session" finally returns to us.
+
+=> The area between opening the "Session" and closing "Session" can be called as "Session Area " or "Persistence Area".
+
+=>Within the "Session Area " or "Persistence Area" there can be a Synchronization between persistence class object and the database table.
+
+=> "org.hibernate.Session" is a light weight object. We will create seperate "Session" object for every client request.
+
+=> Hibernate Query Language , Criteria API ,Native SQL can be used to perform bulk operations.
+
+Procedure to develop Hiberante Application :-
+******************************************
+=>Develop the Persistence class.
+=>Develop the Mapping file. or Configure with Annotations
+=>Develop the Configuration file.
+=>Develop the "HBUtil" class and make "SessionFactory" object as singleton object.
+=>Within the DAO class make use of Hibernate API to develop Hibernate Persistence login.
+
+=> Hibernate is very good for implementing persistence logic.
+=> But Hibernate Persistence logic allows only local clients ,it does not allows remote clients.
+
+=>Local Cliet :-
+  ************
+	If the persistence logic and bussiness logic's are resides in same machine and executing from same JVM then that application can be called as Local Application.
+	Here the Bussiness Logic is Local Client for the Persistence Logic.
+
+=>Remote Cliet :-
+  ************
+	If the persistence logic and bussiness logic's are resides in different machine's and executing from different JVM's then that application can be called as Remote Application.
+	Here the Bussiness Logic is Remote Client for the Persistence Logic.
+
+
+=> Distribute Application allows both Local Client's and Remote Client's.
+
+=> In a distributed application there is a Location Transparency between Client and Server Machine's.
+
+Means A Client Machine can able to identity Server Location changes dynamically based on the customer request.
+
+Ex : All the ATM Machines.
+
+
+=> Hiberante Persistence logic is not a distributed logic because it allows only Local Client's ,it does not allows remote client's.
+
+=> In order to make Hibernate Persistence Logic as distributed logic we will integrate with the Spring .
+
+=>Because Spring  allows both Local client as well as remote client's.
+
+		
+
+					SPRING ORM (SPRING With Hibernate)
+					*********************************
+
+We can develop Hibernate Persistence Logic with Spring in two ways :
+
+	1. HibernateTemplate approch :
+	   
+	2. Taking "SessionFactory" as a dependecy in the DAO class.
+
+
+Procedure HibernateTemplate approch :-
+*********************************
+	
+	** case 1:
+	 *********
+
+		=>Configure Hibenate API (i.e Configuration,SessionFactory) as a spring bean within the applicationContext file.
+		=>configure HibernateTempalte as a and take "SessionFactory" as a depednecy to the HibernateTemplate within a applicationContext file.
+		=> Take HiberanteTemplate as a dependency with the DAO class.
+		=> Make use of Hibernate Template API to develop persistence logic.
+
+		refer EX : "EmployeeHibernateTemplateApp" 
+
+	** case 2:
+	 *********
+		we Should not configure HibernateApi as a spring bean within the configuration file. Which makes tight coupling between technologies.
+		So Spring has given "LocalSessionFactoryBean" which can be act as SessionFactory in hibernate.
+		
+		Just configure LocalSessionFactory Bean and given hibernate.cfg.xml file as "configLocation" property value to LocalSessionFactoryBean.
+
+			<bean id="lsf"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+		p:configLocation="classpath:oracle.cfg.xml" />
+
+		To the HibernateTemplate pass LocalSessionFactoryBean id as a dependency.
+
+		<bean id="hibernateTemplateId"
+		class="org.springframework.orm.hibernate5.HibernateTemplate"
+		p:sessionFactory-ref="lsf" />
+
+		refer EX: "EmployeeHibernateTemplateApp2" 
+	
+	Drawbacks of using HiberanteTemplate:-
+	***************
+			Develope must know Hibernate Template API. which is not recommended.
+
+
+
+
+	Approch 2 => Taking "SessionFactory" as a dependecy in the DAO class.
+	*********************************************************
+
+		=> This is always recomended. Just configure LocalSessionFactoryBean within the applicationContext file as usually.
+		=> Within DAO classes , take SessionFactory as dependency , make use of Hibernate API to develop persistence logic.
+		
+			refer EX: EmployeeRelatimeORMApp
+
+
+		Note :
+			we can avoid hibernate configuration file in SpringORM , by configuring explicitly in applicationContext file.
+
+			refer EX: EmployeeRelatimeORMApp2
+
+
+	
+		
+			
+
+
+
+
+
+	
