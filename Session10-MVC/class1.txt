@@ -1,0 +1,409 @@
+Note :-
+*****
+If we use annotations in Hibernate we need to configure "AnnotationSessionFactoryBean" within the "applicationContext.xml" file.
+
+<bean id="sessionFactoryId" 
+class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"  
+p:configLocation="classpath:hibernate.cfg.xml"></bean>
+
+If we are using "Hibernate4.x" then the "LocalSessionFactoryBean" supports both annotations and xml configurations.
+
+		SPRING MVC
+   		**********
+=>MVC-2 Architecture :-
+  ******************
+
+Integration Logic :-
+******************
+	Based on the request given by JSP a Servlet programe need to invoke the related  Service Class.
+	Based on the response given by the Service class a servlet programe should decide that which jsp page needs to be forwarded to user.
+	This logic can be called a Integration logic.
+
+Complete Enterprice Application work flow will be decided on Integration Logic.
+
+Middleware Services :-
+*******************
+	Middleware Services are the additional logics which we will implement in Service Layer inorder to fulfill the client requirements 100% aqueratly.
+
+	Ex: -
+	*****  
+1.TransactionManagement Service :-
+  *****************************
+	TransactionManagement Service is a concept of grouping all the related jobs togather and executing them as a Single Unit.
+
+	If any one of the Job is not executed successfully we will rollback the transction.
+
+	If all the Job's are executed successfully we will commit the transction.
+
+2.Athentication Service :-
+ ***********************
+	**Athentication Service validates the bussiness rules.
+
+For Ex: -
+******
+1.HDFC account minimum balance should be 5000rs.
+2.If the role is 'Manager' then only he can terminates the Employee.
+etc..
+
+3.Authorization Service :-
+  *********************
+	=> Authorization Service checks the eligibility of the User.
+
+	Ex :-
+	****
+=> Checks wheather the AccountHolder eligible for maintianing "Zero" account balance or not.
+
+Princeples of  MVC-2 Architecture : -
+*********************************
+=> We may have any number of View Page's , we may have any number of model classes but we should have a Single Controller that must be a Servelt program.
+
+=>The complete request processing should be forwarded from the controller only.
+
+=>One view page should not communicate with the another viewPage directly.
+
+=>One View Page should not communicate with the model classes directly.
+
+**************************************************
+Advantages of MVC-2 Architecture :-
+*********************************
+=> refer advantages of Layered Archtecture.
+**********************************************
+
+=> According to the MVC-2 Architecture developing an Integration logic within the ServletPrograme could be very complecated.
+
+=> Spring-MVC is a framework which is used to develop MVC-2 architecture based application's having the capability of generating the integration logic dynamically based on the configuration that we do in the appliationContext.xml file.
+
+=>Spring-MVC has given an implicit controller as "DispatcherServlet".
+
+=>If we use Spring we no need develop the Controller.
+
+=>In Spring the Integration logic is automatically generated within the "DispatcherServlet".
+
+*****************************************************
+=> Even the DispatcherServlet is a predefined Servlet programme given by Spring-MVC.
+
+=> But Servlet Object life cycle is maintained by the Servlet Container so that we should configure the DispatcherServlet within the web.xml file.
+
+=> Here the DispatherServlet is a controller so that it should trap every request which is coming from JSP page.
+
+=>In generally the servlet url-pattern's can be specified in three ways.
+	1.Exact -Match :	
+Ex:-  <url-pattern>/login</url-patter>
+	Here the Servlet programme can trap the request only which is coming from Login page.
+
+
+2.Extention -Match : - In Extention Match the url-pattern will be ending with an extention'
+	
+Ex:-  <url-pattern>*.spring</url-pattern>
+	Here the Servlet programme can able to trap the request those url-pattern is ending with .spring.
+
+		/login.spring (valid)
+		/trasfer.spring (valid)
+		/Login.jsp (invalid)
+
+
+3 Directory-Match :-
+  ***************
+	In Directory-Match the url-pattern will start's with the "/" symbol.
+	
+Ex:-  <url-pattern> / </url-pattern>
+	Here the Servlet programme can able to trap the request those url-pattern is starting with "/" symbol.
+
+		/login (valid)
+		/trasfer.spring (valid)
+		/Login.jsp (valid)
+
+
+So that the DispatcherServlet url-pattern must be either Extention-Match or Directory-Match.
+
+Understanding <load-on-startup> :-
+*******************************
+=> If we enable <load-on-startup> servlet container will create the "Servlet" object at time of starting the server itself.
+
+=>The <load-on-startup> value can be any possitive number.i.e can starts from "0".
+
+=>If we give <load-on-startup> value as nagitive servlet container just igonore it. Means ServetContainer does not create the servlet object.
+
+=>The ServletContainer will allways priority to the lowyer <load-on-startup> value.
+	Means which servlet object <load-on-startup> value is low that object will be created first.
+
+	Ex : -	
+
+Servlet-1 <load-on-startup>-5</load-on-startup>
+Servlet-2 <load-on-startup>0</load-on-startup>
+Servlet-3 <load-on-startup>3</load-on-startup>
+
+ServletContainer first creates a Servlet-2 object  then ServletContainer creates a Servlet-3 Object.
+
+ServletContainer does not creates a object of Servlet-1.
+
+**************************************
+=> DispatcherServlet internally make use of contextConfigLocation initialization parameter to get the applicationContext.xml file path.
+
+<init-param>
+<param-name>contextConfigLocation</param-name>
+<param-value>/WEB-INF/applicationContext.xml</param-value>
+</init-param>
+
+
+=> DispatcherServlet internally make use of "ContextLoaderListener" class to load the applicationContex.xml file.
+
+=>When we use annotations  ContextLoaderListener class helps the DispatcherServlet for generating integration logic.
+
+=>So that it is allways recommended to configure ContextLoaderListener class within the "web.xml" file.
+
+<listener>
+<listener-class>
+org.springframework.web.context.ContextLoaderListener
+</listener-class>
+</listener>
+
+
+org.springframework.web.servlet.DispatcherServlet  configuration in  web.xml file.
+
+web.xml
+*******
+<web-app>
+
+<servlet>
+
+<servlet-name>ds</servlet-name>
+<servlet-class>
+org.springframework.web.servlet.DispatcherServlet 
+</servlet-class>
+
+<init-param>
+<param-name>contextConfigLocation</param-name>
+<param-value>/WEB-INF/applicationContext.xml</param-value>
+</init-param>
+
+<load-on-startup>0</load-on-startup>
+
+</servlet>
+
+<servlet-mapping>
+<servlet-name>ds</servlet-name>
+<url-pattern>/</url-pattern>
+</servlet-mapping>
+
+<listener>
+<listener-class>
+org.springframework.web.context.ContextLoaderListener
+</listener-class>
+</listener>
+
+</web-app>
+
+WebApplicationContext :-
+*********************
+=> WebApplicationContext is another SpringContainer given by the SpringFramework.
+
+=> "org.springframework.web.context.WebApplicationContext" is having some additional features related to WebApplicationContext area.
+
+=>At time of Initialization Phase of a DispatcherServet , the DispatcherServlet creates a "WebApplicationContext" object by passing the "applicationContext.xml" file.
+
+=>At the time of Initialization Phase itself the integration logic is generated within the DispatcherServlet.
+
+=>Once the initialization phase over the DispatcherServlet is ready to provide the service.
+
+Note :-
+*****
+	WebApplicationContext is a sub interface of ApplicationContext.
+
+******************************************************
+According to MVC-2 Architecture a "Controller" only should communicate with the Model classes.
+
+=>But in Spring-MVC the DispatcherServlet is a predefined Controller.
+
+=>We can not write model classes communication logic with the DispatcherServlet.
+
+	So that Spring has given a facility in the form of "Controller classes".
+
+
+Controller Class :-
+****************
+=> Whatever java class is a sub class of "org.springframework.web.servlet.mvc.Controller" interface can be act as a Controller class.
+
+=> The "Controller" interface contains an abstract method as 
+	
+	public abstract ModelAndView handleRequest(HttpServletRequest,HttpServletResponse) throws Exception
+
+=>Within our "Controller class" we will override this method  and writes  ModelClasses communication logic .
+
+=>The "handleRequest(..)" method is automatically called by the "DispatcherServlet" by passing ServletRequest and ServletResponse object's.
+
+=>The "handleRequest(..)" method returns "ModelAndView" object to the "DispatcherServlet".
+
+=>Every controller class can uniquely identified with one "action-path".
+
+=>We will use Handler Mapping to map the controller classes with the action paths.
+
+=>Within the jsp page we will make a request to the "Controller class" using "action-path".
+
+For Ex: Asuume LoginController action path is "/login".
+	
+	Login.jsp
+	*********
+	<form action="/login"  method="post" >
+	....
+	...
+	</form>
+
+
+*********************************************
+HandlerMappings :-
+****************
+=>Spring has given HandlerMappings to map the Controller class with the unique action-path.
+
+1. BeanNameUrlHandlerMapping
+   *************************
+=> BeanNameUrlHandlerMapping is the default handler mapping.
+
+=>If we don't configure any handler mapping within the bean configuration file DispatcherServlet internally make use of BeanNameUrlHandlerMapping.
+
+=>If use BeanNameUrlHandlerMapping the id value of the Controller class and action-path must be same.
+
+=>In the <bean> tag we use either "id" or "name" attributes to specify the logical name to the "SpringBean".
+
+=>Using "id" attribute we can not give more than one logical name at the same time.
+
+=>Using "name" attribute we can do this.
+Ex:-
+<bean id="sid" class="com.nit.Sample" />
+<bean name="sid1,sid2" class="com.nit.Sample" />
+
+applicationContext.xml
+**********************
+	<beans ...>
+
+<bean id="handlerMapping"  class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
+</bean>
+
+<bean name="/login"  class="com.nit.LoginController">
+</bean>
+
+<bean name="/transfer"  class="com.nit.TransferController">
+</bean>
+
+</beans>
+
+Note :
+This mapping is not recommended to use.
+
+2.SimpleUrlHandlerMapping :-
+  ************************
+=> The SimpleUrlHandlerMapping allows the progrmer to map the controller class with the "action-path" seperatly.
+
+=>The SimpleUrlHandlerMapping contains a setter method as "public void setMappings(Properties  mappings)".
+
+=>We need to configure this.
+
+
+applicationContext.xml
+**********************
+	<beans ...>
+
+<bean name="loginId"  class="com.nit.LoginController">
+</bean>
+
+<bean name="transferId"  class="com.nit.TransferController">
+</bean>
+
+<bean id="handlerMapping"  class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+<property name="mappings">
+<props>
+<prop key="/login" >loginId</prop>
+<prop key="/transfer" >transferId</prop>
+</props>
+</property>
+</bean>
+
+</beans>
+
+ModelAndView :-
+*************
+=>The "ModelAndView" object is an Object Oriented Representation of a model data and view page.
+
+=>The "ModelAndView" contains the information about result jsp page as well as bussiness data.
+
+=>The "org.springframework.web.servlet.ModelAndView" object can be created in two ways.
+
+ModelAndView(String) :-
+*********************
+	Created using logical name of the Jsp file.
+
+new ModelAndView("success");
+
+
+ModelAndView(String,String,Object) :-
+*********************
+	Here the First parameter indicates the logical name of the Jsp's File.
+	The Sencond parameter indicates  the "key" name od the Modeldata.
+		This key name we will use in jsp file to print the model information.
+	The 3rd parameter indicate the Model Data.
+
+Ex:-
+String  name = userService.getUserName(..);
+
+if(name != null){
+ new ModelAndView("success","userName" , name);
+		}
+else
+	{
+new ModelAndView("failure");
+	}
+
+success.jsp
+************
+Login Successfull.
+Welcome to ${userName}
+
+=> The "ModelAndView" Object will be returned by the "Controller class" to the DispatcherServlet.
+
+=>DispatcherServlet internally make use of "ViewResolver's" to forward the result jsp file to the client.
+
+ViewResolvers :-
+***************
+1.BeanNameViewResolver :- 
+  *********************
+
+=> BeanNameViewResolver is the default viewResolver given by spring.
+
+=>If don't configure any viewResolver within the "applicationContex.xml" file DispatcherServlet will make use of this.
+
+applicaionContext.xml
+*********************
+<beans ....>
+......
+.....
+<bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver" >
+</bean>
+
+</beans>
+
+=>If we are making use of BeanNameViewResolver we should return physical jsp file name from the "ModelAndView" object.
+
+Ex:-
+new ModelAndView("/sucess.jsp");
+
+InternalResourceViewResolver :-
+***************************
+=> The InternalResourceViewResolver allows the programmer to return logical name's from the "ModelAndView" Object.
+
+<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+
+<property name="prefix" value="/">
+</property>
+<property name="suffix" value=".jsp">
+</property>
+
+</bean>
+
+=> The InternalResourceViewResolver add "prefix" and "suffix" to the logical name of the jsp then that will be forwarded to the client.
+
+return new ModelAndView("product");
+
+	Here the "/product.jsp" file will be forwarded to the client.
+
+*****************************************************
+		  Demo Mvc Application :
