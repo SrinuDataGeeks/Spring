@@ -1,0 +1,131 @@
+Disadvantages of Controller classes :-
+************************************
+=> Our controller classes are depending on Spring API.
+=>Our controller classes  are dependening on Servlet API.
+
+So that Spring has given annotation support.
+@Controller :-
+***********
+	Makes our java class as Controller class.
+
+@RequestMapping :-
+***************
+	Used to map the Controller class with the "action-path".
+
+@RequestMapping can be applied on Class Level as well as Method Level.
+
+@RequestMapping(value="action-path", method=RequestMethod.GET)
+
+Ex:-
+***
+@Controller
+public class DemoController
+	{
+@RequestMapping(value="/msg", method=RequestMethod.GET)
+public String getMsg()
+{
+return "success";
+}
+	}
+
+=> If we use annotation we can define our own userdefined method within the Controller.
+
+=>Here the  method return type is "String". We can directly return the logical name of the Jsp file.
+
+=> If we want to show any Model data within the response page then we need to take "ModelMap" object as a parameter within the controller class method.
+
+=>Whatever data we are binding within the "ModelMap" object which will be visible in Jsp File.
+
+"ModelMap" has given method as  
+
+public void addAttribute(String keyName ,Object modelData);
+
+This can be used to add the Model data to the ModelMap object.
+
+=>Within the Controller class method take the "ModelMap" object as a last parameter.
+
+Class or Annotation   		Package Name 
+
+@Controller    		org.springframework.stereotype.Controller
+
+
+@RequestMapping 	org.springframework.web.bind.annotation.RequestMapping
+
+
+RequestMethod           org.springframework.web.bind.annotation.RequestMethod
+
+ModelMap	       org.springframework.ui.ModelMap
+
+
+**web.xml take it from previous app
+
+welcome.jsp
+***********
+<center>
+<h1> Demo on MVC <br><br>
+${demomsg}
+</h1>
+</center>
+Drawbacks of traditional html tags :-
+**********************************
+
+=> The traditional html tags can not get the data into the component's dymamically.
+=> The  traditional html tags can not get the label names form the properties files.
+=>The  traditional html tags can not get the validation error messages.
+
+So that spring has given a taglib library for implementing form pages.
+
+This can be access with the following uri 
+"http://www.springframework.org/tags/form".
+
+We can import the taglib within our form page using <%@ taglib %> directive.
+
+ <%@ taglib uri="http://www.springframework.org/tags/form"
+  prefix="f" %>
+
+Spring given Tags 
+For Text Box : -
+************
+	<f:input path="userName" />
+For Password Text box :
+*********************
+<f:password path="userPassword"/>
+
+Radio Button :-
+*************
+<f:radiobutton path="gender" value="Male"/> Male
+
+Selct Box :-
+**********
+<f:select path="country">
+<f:option value="USA">USA</f:option>
+<f:option value="London">London</f:option>
+</f:select>
+
+checkBox :-
+**********
+<f:checkbox path="qualification" Value="B.Tech"/>B.Tech
+<f:checkbox path="qualification" Value="M.Tech"/>M.Tech
+
+etc...
+
+When we use "Spring given tags " within the "<f:form>" tag we should specify the following two attributes 
+commandName and modelAttribute.
+
+
+"commandName" :- This is the commandClass object key name. We will bind the CommandClass object with one key name within the controller method.
+
+modelAttribute :-
+*************     Within the controller method @ModelAttribute annotation used to specify the "modelAttribute" value.	
+
+When we use Spring given tags allways the jsp file should be invoked from the controller itself.
+
+Because the jsp file needs "commandName" and "modelAttribute" references.
+
+commandName :-
+************
+	This can used to load the commandClass object data into the Jsp file.
+
+modelAttribute :-
+***************
+This can used to load the formdata into the  commandClass object after submision of the form.
