@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    https://www.springframework.org/schema/beans/spring-beans.xsd 
+    http://www.springframework.org/schema/util
+    https://www.springframework.org/schema/util/spring-util.xsd 
+    http://www.springframework.org/schema/context
+    https://www.springframework.org/schema/context/spring-context.xsd 
+    http://www.springframework.org/schema/tx
+    https://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<context:component-scan base-package="com.datageeks" />
+	
+	<context:property-placeholder  location="classpath:dbinfo.properties"/>
+
+	<bean id="dataSourceId"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		p:username="${name}" p:password="${pass}"
+		p:url="${urlinfo}"
+		p:driverClassName="${driverclass}"></bean>
+
+	<bean id="sf"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+		p:dataSource-ref="dataSourceId" 
+		>
+		
+		<property name="annotatedClasses">
+			<list>
+				<value>com.datageeks.dao.EmployeeBean</value>
+				
+			</list>
+		</property>
+		
+		<property name="hibernateProperties">
+			<props>
+			<prop key="hibernate.dialect"> org.hibernate.dialect.Oracle10gDialect</prop>
+			<prop key="show_sql"> true</prop>
+			</props>
+		</property>
+		
+	</bean>
+	
+	<bean id="transactionManagerId" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+	<property name="sessionFactory" ref="sf"></property>
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManagerId"/>
+	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<property name="prefix" value="/"></property>
+	<property name="suffix" value=".jsp"></property>
+	</bean>
+</beans>
+    

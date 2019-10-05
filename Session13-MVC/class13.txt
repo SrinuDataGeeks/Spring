@@ -1,0 +1,105 @@
+		Internationlization :-
+		*******************
+=> Spring MVC gives build-in support to work with 
+Internationlization.
+
+=>Spring has given LocaleChageInterceptor to work with 
+Internationlization.
+
+org.springframework.web.servlet.i18n.
+LocaleChangeInterceptor :-
+*****************************
+
+=> The LocaleChangeInterceptor does the following jobs
+	
+	**Traps the requested Locale.
+	**Invokes the related resource bundle.
+
+=> While configuring the  LocaleChangeInterceptor we need to specify the locale request parameter name .
+
+For Ex:-
+******
+ <a href="./userPage?lang=te"> Telugu </a>
+Here the locale request parameter name is "lang".
+
+We can configure this using "paramName" property.
+
+<property name="paramName" value="lang" />
+
+
+=>SessionLocaleResolver :-
+**************************
+=> The "SessionLocaleResolver" maintaines the client seleted Locale until client closes the session.
+
+=> While configuring the "SessionLocaleResolver" we need to specify the "defaultLocale".
+
+=> The "SessionLocaleResolver" id value must be "localeResolver".
+
+<bean id="localeResolver" 
+class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+<property name="defaultLocale" value="en"></property>
+</bean>
+
+****************************************************
+Note :-
+
+To get the equalent HTML text for Telugu 
+and Hindi languages.
+Just type "vikku info" in google .
+Then you will be getting Telugu Unicode Converter 
+link within the first option.
+=>Click on that link 
+=>On the left  box type "naam" 
+=>On the Right box you can find telugu language
+=>In the buttom box we can get the equalent 
+html content. Copy that and paste as a value to the
+"label.userName" key in 
+"ApplicationResources_te.properties" file.
+Similarly apply for all the labels.
+
+
+		Exception Handling in Spring 
+		****************************
+=>In Spring MVC Exception Handling can be done in two ways.
+	1.Programmtic Approch
+	2.Declarative Approch
+
+Programmtic Approch :-
+********************
+In Programmatic Approch within the controller class we will write the ExceptionHandling logic.
+
+From the catch block we can return "error.jsp" page.
+
+Ex:-
+****
+
+@RequestMapping(value="/register" ,
+			method=RequestMethod.POST)
+	public String registerUser(
+	@ModelAttribute("userBean") UserBean userCommand , BindingResult result ,ModelMap modelMap)
+	{
+String s = null;
+try{
+System.out.println("*****Length "+s.length());
+}catch(Exception e)
+	{
+return "error";
+	}
+	......
+	......
+		}
+
+=> Declarative Approch :-
+  ********************
+=> In Declarative Approch we never write Exception Handling logic within the controller , We will configure all the exceptions within the applicationContext.xml file using "SimpleMappingExceptionResolver".
+
+<bean id="exceptionResolver"  class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+ <property name="exceptionMappings">
+ <props>
+ <prop key="java.lang.Exception">error</prop>
+  </props>
+ </property>
+ </bean>
+***************************************************
+drop table AccountHolder;
+create table AccountHolder(accNo number(10) Primary Key,accName varchar2(20) ,amount number(10,2));
