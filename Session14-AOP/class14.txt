@@ -1,0 +1,226 @@
+ =>Core Concern's we can implement using Object Oriented programming language(OOPL).
+
+=>Cross cutting concern's can be implemented using Aspect Oriented Programming language(AOP).
+
+AOP can apply the cross cutting code dynamically to the core concerns.
+
+
+Aspect Oriented Programming(AOP) :-
+******************************
+The AOP is devided in three parts
+
+		Spring AOP
+
+ClassicAOP    Schema Based AOP	AspectJAnnotions
+
+Concepts of Spring AOP :-
+**********************
+=>JoinPoint
+=>Pointcut
+=>Advice
+=>Aspect
+=>Target
+=>Weaving
+
+JoinPoint :
+***********
+	It is a well defined place within a core concern of a Bussiness Logic Layer
+	where the cross cutting code is going to be applied.
+
+
+Pointcut:
+*********
+**Pointcut is a collection of JoinPoints.
+**In Spring Classic AOP we pointcut is a 	SpringBean.
+**In Spring Schema Based AOP and AspectJAnnotations 	the Point is an expression.
+
+Advice :-
+*******
+=>In Spring AOP we will implement cross cutting code within the Advice classes.
+
+=>In Spring classic AOP Advice classes are depends on Spring API.
+
+=>In Spring Schema Based AOP and AspectJAnnotations 	advice classes are SpringBeans.
+
+Aspect :-
+********
+	Applying a advice to the pointcut can be called as Aspect.
+		Aspect = pointcut + advice
+Target :-
+******
+	This is the actual core concern object where will apply cross cutiing code.
+
+Weaving :-
+********
+	Applying advices to the pointcut dynamically can be called as Weaving.
+
+
+
+Note :-
+*****
+	Invocation of Advice classes by the proxy can be varied based on the "Service" we implement.
+For Ex:-
+*******
+	Athentication Service :-
+	********************
+	=> First advice will be executed then the coreconcern method will be invoked by the Proxy.
+	=>In case if the Advice return's invalid result then the Core Concern method won't be executed by the Proxy.
+
+	Autherization Service :-
+	********************
+	=> First coreconcern method will be executed then the advice will be invoked by the 
+Proxy.
+
+	TransactionManagement Service :-
+	********************
+	=> First advice will be  executed.(Preprocessin Logic Or Starting Transaction )
+
+	=> 2nd CoreConcern logic will be executed. 
+
+	=> 3rd again advice will be  executed.
+
+
+
+
+		Spring Schema Based AOP	
+		***********************
+Spring Schema Based AOP, can map Advices to the CoreConcerns using Xml Configurations.
+ 
+1. Method Before Advice : <aop:before>
+	**************
+		Advice will be applied before the Join Point , can be used for developing Athentication Services.
+2. After Returning Advice : <aop:after-returning>
+	******************
+		Advice will be applied after the Join Point , can be used for developing Authorization Services.
+
+3. After Throwing Advice : <aop:after-throwing>
+	****************
+		Advice will be applied whenever JoinPoint throws Exception. Can be used for centeralize the exception handling logic.
+
+4. Around   Advice : <aop:around>
+	****************
+		Advice will be applied before and after the joinpoint. Can be used for transaction management service.
+
+5. Finally Advice : <aop:after>
+	***********************
+		Advice will be invoked after the joinpoint execution for all the time. can be used for resource deallocation logic.
+
+=>These tags we can use within the applicationContext.xml file to map the classes with the advices.
+
+=> In Spring Schema Based AOP the pointcut is an expression.
+
+=> The Pointcut expression can be written using "execution" and "within" keyword's.
+
+execution :-
+*********   using "execution" we can select the joinpoints in method,class,package level.
+
+systax :-
+********
+execution(
+modifiers-pattern?   ruturntype  name-pattern(parameters-pattern) throws exception? )
+
+=> Here the "?" symbol indicates optional. Means the modifiers-pattern and throws-pattern both are optional.
+
+=>When these two needs to be declared within the expression then only we should use otherwise we must skip them.
+
+Examples :-
+*********
+=> Execution of all the public jointpoint's .
+
+execution(public * *(..) )
+
+Here ".." indicates zero or more parameters.
+
+
+=> Execution of all the jointpoint's whose return type is "String".
+
+execution(String *(..))
+
+
+=> Execution of all the setter jointpoint's 
+
+execution(* set*(..))
+
+
+=> Execution of all the jointpoint's  within the com.nit.service.AccountService class
+
+execution(* com.nit.service.AccountService.*(..))
+
+=> Execution of all the jointpoint's  within the com.nit.service package
+
+execution(* com.nit.service.*.*(..))
+
+=> Execution of all the jointpoint's  within the com.nit.service package and it's sub packages.
+
+
+execution(* com.nit.service..*.*(..))
+
+
+=> Execution of all the jointpoint's whose first paramater is String within the com.nit.service.AccountService class
+
+execution(* com.nit.service.AccountService.*(String,..))
+=> Execution of  "trasferAmount(Float amount)"  jointpoint , within the com.nit.service.AccountService class
+
+execution(* com.nit.service.AccountService.trasferAmount(Float))
+
+within
+********* 
+	=>Using "within" keyword we can select the joinpoints either on class level or on package level.
+	
+=> Execution of all the jointpoint's  within the com.nit.service.AccountService class
+
+within(com.nit.service.AccountService)
+
+=> Execution of all the jointpoint's  within the com.nit.service package
+
+within(com.nit.service.*)
+
+=> Execution of all the jointpoint's  within the com.nit.service package and it's sub packages.
+
+within(com.nit.service..*)
+
+**********************************************
+org.aspectj.lang.JoinPoint :-
+***************************
+=> The "JoinPoint" interface gives the the meta information about the coreconcern method.
+
+The JoinPoint has the following methods.
+
+public Object[] getArgs() :- 
+**************************
+	Returns the complete core concern input parameter values as an Object[]
+
+public Object getTarget() :- returns the target core concern object.
+
+public Object getThis() :- returns the Proxy object.
+
+public String toString(),
+public String toShortString(),
+public String toLongString() :-  All these methods returns the pointcut expressions.
+
+
+public String getKind() :-
+**********************
+	It will return what kind of advice it is .
+Wheather it is method level or class level or package level or Block level.
+	
+	Spring supports method level.
+
+Using Spring we can apply advice only on method level.
+
+**********************************************
+
+In Spring Schema Based AOP the Advice classes are SpringBeans so that to get the meta information about the core concern method we should take "org.aspectj.lang.JoinPoint" as a first parameter within the advice class methods.
+
+**************************************
+
+
+Procedure to implement AOP Applications :-
+***************************************
+1.Develop all the Core Concerns and Cross Cutting Concerns required for our application.
+
+2.Configure all the Core Concern's ,Cross Cutting Concern's applicationContext.xml file.
+
+3.Map the crosscutting concerns with core concerns using aop tags in the context file.
+
+4.Within the application get the CoreConcern object invokes the method .
